@@ -28,19 +28,33 @@ client.on('messageCreate', message => {
         getResource('places');
     }
 
-    if (message.content == 'mk') {
-        console.log(message.author);
-        const message = getChara1Score('STR(筋力)') + '\n'
+    // コマンドヘルプ
+    if (message.content == '/help') {
+        const helps = [
+            '/makechara',
+            '/makechara2',
+            '/makechara3', 
+            '/d <数字>d<数字>',
+            '/bd <数字>',
+            '/pd <数字>',
+            '/guide <list, create1,create2>※WIP',
+        ];
+        message.channel.send("```css\n" + helps.join('\n') + "```\n");
+    }
+
+    // ステータス3候補型ランダム生成(6版準拠)
+    if (message.content == '/makechara') {
+        const msg = getChara1Score('STR(筋力)') + '\n'
             + getChara1Score('CON(健康)') + '\n'
             + getChara1Score('POW(精神)') + '\n'
             + getChara1Score('DEX(敏捷)') + '\n'
             + getChara1Score('APP(外見)') + '\n'
             + getChara1Score('SIZ(体格)') + '\n'
             + getChara1Score('INT(知力)') + '\n'
-            + getChara1Score('EDU(教育)') + '\n'
-            ;
+            + getChara1Score('EDU(教育)');
+
         message.channel.send(`《 ${message.author} さんの自動振り分け結果》`);
-        message.channel.send("```css\n" + getChara1Score('STR(筋力)') + "```\n");
+        message.channel.send("```css\n" + msg + "```\n");
     }
 });
 
