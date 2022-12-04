@@ -44,17 +44,20 @@ client.on('messageCreate', message => {
 
     // ステータス3候補型ランダム生成(6版準拠)
     if (message.content == '/makechara') {
-        const msg = getChara1Score('STR(筋力)') + '\n'
-            + getChara1Score('CON(健康)') + '\n'
-            + getChara1Score('POW(精神)') + '\n'
-            + getChara1Score('DEX(敏捷)') + '\n'
-            + getChara1Score('APP(外見)') + '\n'
-            + getChara1Score('SIZ(体格)') + '\n'
-            + getChara1Score('INT(知力)') + '\n'
-            + getChara1Score('EDU(教育)');
+        const titles = [
+            'STR(筋力)',
+            'CON(健康)',
+            'POW(精神)',
+            'DEX(敏捷)',
+            'APP(外見)',
+            'SIZ(体格)',
+            'INT(知力)',
+            'EDU(教育)',
+        ];
+        const scores = titles.map(x => getChara1Score(x));
 
         message.channel.send(`《 ${message.author} さんの自動振り分け結果》`);
-        message.channel.send("```css\n" + msg + "```\n");
+        message.channel.send("```css\n" + scores.join('\n') + "```\n");
     }
 });
 
