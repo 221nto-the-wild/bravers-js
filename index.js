@@ -31,19 +31,21 @@ client.on('messageCreate', message => {
     // コマンドヘルプ
     if (message.content == '/help') {
         const helps = [
-            '/makechara',
-            '/makechara2',
-            '/makechara3', 
+            '/make',
+            '/make2',
+            '/make3', 
             '/d <数字>d<数字>',
             '/bd <数字>',
             '/pd <数字>',
             '/guide <list, create1,create2>※WIP',
         ];
-        message.channel.send("```css\n" + helps.join('\n') + "```\n");
+
+        const payload = "```css\n" + helps.join('\n') + "```\n";
+        sendMessage(message, payload);
     }
 
     // ステータス3候補型ランダム生成(6版準拠)
-    if (message.content == '/makechara') {
+    if (message.content == '/make') {
         const titles = [
             'STR(筋力)',
             'CON(健康)',
@@ -55,9 +57,9 @@ client.on('messageCreate', message => {
             'EDU(教育)',
         ];
         const scores = titles.map(x => getChara1Score(x));
-        const msg = `《 ${message.author} さんの自動振り分け結果》` + "```css\n" + scores.join('\n') + "```\n";
 
-        message.channel.send(msg);
+        const payload = `《 ${message.author} さんの自動振り分け結果》` + "```css\n" + scores.join('\n') + "```\n";
+        sendMessage(message, payload);
     }
 
     // ダイス(/d <数字>d<数字>)
@@ -73,9 +75,9 @@ client.on('messageCreate', message => {
         const diceMax = rolls[1];
         const diceResults = [...Array(diceAttempts)].map(() => getRandomInt(1, diceMax));
         const sum = diceResults.reduce((sum, x) => sum + x, 0);
-        const msg = `**${message.author} さんのダイスロール(${parameter}) ⇒⇒⇒ [${diceResults.toString()}] 合計【${sum}】**`;
 
-        message.channel.send(msg);
+        const payload = `**${message.author} さんのダイスロール(${parameter}) ⇒⇒⇒ [${diceResults.toString()}] 合計【${sum}】**`;
+        sendMessage(message, payload);
     }
 });
 
@@ -97,4 +99,8 @@ function getChara1Score(ability) {
 function getRandomInt(min, max) {
     // min～maxのランダムな整数
     return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function sendMessage(message, payload) {
+    message.channel.send(payload);
 }
