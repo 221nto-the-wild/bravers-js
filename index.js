@@ -59,6 +59,24 @@ client.on('messageCreate', message => {
 
         message.channel.send(msg);
     }
+
+    // ダイス(/d <数字>d<数字>)
+    if (message.content.startsWith('/d')) {
+        const parameter = message.content.slice(3);
+        const rolls = parameter.split('d').map(x => parseInt(x));
+
+        if (rolls.length !== 2) {
+            return
+        }
+
+        const diceAttempts = rolls[0];
+        const diceMax = rolls[1];
+        const diceResults = [...Array(diceAttempts)].map(() => getRandomInt(1, diceMax));
+        const sum = diceResults.reduce((sum, x) => sum + x, 0);
+        const msg = `**${message.author} さんのダイスロール(${parameter}) ⇒⇒⇒ [${diceResults.toString()}] 合計【${sum}】**`;
+
+        message.channel.send(msg);
+    }
 });
 
 // Discordへの接続
@@ -73,10 +91,10 @@ function getResource(filename) {
 }
 
 function getChara1Score(ability) {
-    return ability + '【' + getAbilityScore(3, 18) + ',' + getAbilityScore(3, 18) + ',' + getAbilityScore(3, 18) + '】';
+    return ability + '【' + getRandomInt(3, 18) + ',' + getRandomInt(3, 18) + ',' + getRandomInt(3, 18) + '】';
 }
 
-function getAbilityScore(min, max) {
+function getRandomInt(min, max) {
     // min～maxのランダムな整数
     return Math.floor(Math.random() * (max - min)) + min;
 }
