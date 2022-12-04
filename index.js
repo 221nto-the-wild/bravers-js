@@ -55,9 +55,9 @@ client.on('messageCreate', message => {
             'EDU(教育)',
         ];
         const scores = titles.map(x => getChara1Score(x));
+        const msg = `《 ${message.author} さんの自動振り分け結果》` + "```css\n" + scores.join('\n') + "```\n";
 
-        message.channel.send(`《 ${message.author} さんの自動振り分け結果》`);
-        message.channel.send("```css\n" + scores.join('\n') + "```\n");
+        message.channel.send(msg);
     }
 });
 
