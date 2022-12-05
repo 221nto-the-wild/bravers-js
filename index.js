@@ -129,6 +129,33 @@ client.on('messageCreate', message => {
         const payload = `**${message.author} さんのボーナス・ダイス(+${bonusDice}個)の出目は〔${bdResult}〕(出目は[${diceResults.toString()}])**`;
         sendMessage(message, payload);
     }
+
+    // ペナルティーダイス
+    if (message.content.startsWith('/pd')) {
+        const args = message.content.split(' ');
+        
+        if (args.length !== 2) {
+            // 引数過不足エラー
+            sendMessage(message, 'Please enter "/pd <追加数量>"');
+            return;
+        }
+
+        const penaltyDice = parseInt(args[1]);
+        
+        if (isNaN(penaltyDice)) {
+            // 形式エラー
+            sendMessage(message, '整数を入力してください：' + args[1]);
+            return;
+        }
+
+        const diceResults = [...Array(penaltyDice + 1)].map(() => getRandomInt(1, 10) * 10);
+        const resultMax = Math.max(...diceResults);
+        const resultMin = Math.min(...diceResults);
+        const pdResult = resultMax + getRandomInt(0, 9);
+
+        const payload = `**${message.author} さんのペナルティー・ダイス(+${penaltyDice}個)の出目は〔${pdResult}〕(出目は[${diceResults.toString()}])**`;
+        sendMessage(message, payload);
+    }
 });
 
 // Discordへの接続
