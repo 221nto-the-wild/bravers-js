@@ -26,7 +26,7 @@ client.on('messageCreate', message => {
             '/make',
             '/make2',
             '/make3', 
-            '/d <数字>d<数字>',
+            '/d <ダイス数> <ダイスの目>',
             '/bd <追加ダイス数>',
             '/pd <追加ダイス数>',
             '/guide <list, create1,create2>※WIP',
@@ -87,19 +87,31 @@ client.on('messageCreate', message => {
 
     // ダイス
     if (message.content.startsWith('/d')) {
-        const parameter = message.content.slice(3);
-        const rolls = parameter.split('d').map(x => parseInt(x));
-
-        if (rolls.length !== 2) {
-            return
+        const args = message.content.split(' ');
+        
+        if (args.length !== 3) {
+            sendMessage(message, '*Please enter `/d <ダイス数> <ダイスの目>`*');
+            return;
         }
 
-        const diceAttempts = rolls[0];
-        const diceMax = rolls[1];
+        const diceAttempts = parseInt(args[1]);
+        
+        if (isNaN(diceAttempts) || diceAttempts < 1) {
+            sendMessage(message, '*`<ダイス数>` に正数を入力してください：`' + args[1] + '`*');
+            return;
+        }
+
+        const diceMax = parseInt(args[2]);
+        
+        if (isNaN(diceMax) || diceMax < 1) {
+            sendMessage(message, '*`<ダイスの目>` に正数を入力してください：`' + args[2] + '`*');
+            return;
+        }
+
         const diceResults = [...Array(diceAttempts)].map(() => getRandomInt(1, diceMax));
         const sum = diceResults.reduce((sum, x) => sum + x, 0);
 
-        const payload = `**${message.author} さんのダイスロール(${parameter}) ⇒⇒⇒ [${diceResults.toString()}] 合計【${sum}】**`;
+        const payload = `**${message.author} さんのダイスロール(${diceAttempts}d${diceMax}) ⇒⇒⇒ [${diceResults.toString()}] 合計【${sum}】**`;
         sendMessage(message, payload);
     }
 
@@ -108,7 +120,6 @@ client.on('messageCreate', message => {
         const args = message.content.split(' ');
         
         if (args.length !== 2) {
-            // 引数過不足エラー
             sendMessage(message, '*Please enter `/bd <追加ダイス数>`*');
             return;
         }
@@ -116,7 +127,6 @@ client.on('messageCreate', message => {
         const additionalNumber = parseInt(args[1]);
         
         if (isNaN(additionalNumber) || additionalNumber < 1) {
-            // 形式エラー
             sendMessage(message, '*`<追加ダイス数>` に正数を入力してください：`' + args[1] + '`*');
             return;
         }
@@ -146,7 +156,6 @@ client.on('messageCreate', message => {
         const args = message.content.split(' ');
         
         if (args.length !== 2) {
-            // 引数過不足エラー
             sendMessage(message, '*Please enter `/pd <追加ダイス数>`*');
             return;
         }
@@ -154,7 +163,6 @@ client.on('messageCreate', message => {
         const additionalNumber = parseInt(args[1]);
         
         if (isNaN(additionalNumber) || additionalNumber < 1) {
-            // 形式エラー
             sendMessage(message, '*`<追加ダイス数>` に正数を入力してください：`' + args[1] + '`*');
             return;
         }
