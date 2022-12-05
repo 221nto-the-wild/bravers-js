@@ -21,7 +21,7 @@ client.on('messageCreate', message => {
     }
 
     // コマンドヘルプ
-    if (message.content == '/help') {
+    if (message.content === '/help') {
         const helps = [
             '/make',
             '/make2',
@@ -37,7 +37,7 @@ client.on('messageCreate', message => {
     }
 
     // ステータス3候補型ランダム生成(6版準拠)
-    if (message.content == '/make') {
+    if (message.content === '/make') {
         const titles = [
             'STR(筋力)',
             'CON(健康)',
@@ -55,7 +55,7 @@ client.on('messageCreate', message => {
     }
 
     // ステータス3候補型ランダム生成(7版準拠)
-    if (message.content == '/make2') {
+    if (message.content === '/make2') {
         const abilities = [
             { name: '◆《筋力》 (STR)', min: 3 },
             { name: '◆《体力》 (CON)', min: 3 },
