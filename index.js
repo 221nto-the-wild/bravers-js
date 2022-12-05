@@ -19,15 +19,7 @@ client.on('messageCreate', message => {
     if (message.author.bot) {
         return;
     }
-
-    if (message.content == 'hi') {
-        message.channel.send('hi!');
-    }
-
-    if (message.content == 'places') {
-        getResource('places');
-    }
-
+    
     // コマンドヘルプ
     if (message.content == '/help') {
         const helps = [
