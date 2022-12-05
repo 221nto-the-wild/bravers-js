@@ -109,24 +109,35 @@ client.on('messageCreate', message => {
         
         if (args.length !== 2) {
             // 引数過不足エラー
-            sendMessage(message, 'Please enter "/bd <追加ダイス数>"');
+            sendMessage(message, '*Please enter `/bd <追加ダイス数>`*');
             return;
         }
 
-        const bonusDice = parseInt(args[1]);
+        const additionalNumber = parseInt(args[1]);
         
-        if (isNaN(bonusDice)) {
+        if (isNaN(additionalNumber) || additionalNumber < 1) {
             // 形式エラー
-            sendMessage(message, '整数を入力してください：' + args[1]);
+            sendMessage(message, '*`<追加ダイス数>` に正数を入力してください：`' + args[1] + '`*');
             return;
         }
 
-        const diceResults = [...Array(bonusDice + 1)].map(() => getRandomInt(0, 10) * 10);
-        const resultMax = Math.max(...diceResults);
-        const resultMin = Math.min(...diceResults);
-        const bdResult = resultMin + getRandomInt(0, 9);
+        const onesPlace = getRandomInt(0, 9);
+        const tensPlaces = [...Array(additionalNumber + 1)].map(() => getRandomInt(0, 10) * 10);
+        const maxTensPlace = Math.max(...tensPlaces);
+        let minTensPlace = Math.min(...tensPlaces);
+        
+        if (minTensPlace + onesPlace === 0) {
+            minTensPlace = tensPlaces.sort()[1];
+        }
 
-        const payload = `**${message.author} さんのボーナス・ダイス(+${bonusDice}個)の出目は〔${bdResult}〕(出目は[${diceResults.toString()}])**`;
+        let result = minTensPlace + onesPlace;
+        const isFumble = (maxTensPlace + onesPlace === 0);
+
+        if (isFumble) {
+            result = 100;
+        }
+
+        const payload = `**${message.author} さんのボーナス・ダイス(+${additionalNumber}個)の出目は〔${result}〕(出目は[${tensPlaces.toString()}])**`;
         sendMessage(message, payload);
     }
 
