@@ -4,7 +4,7 @@ http.createServer(function (req, res) {
   res.end();
 }).listen(8080);
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, EmbedBuilder, GatewayIntentBits } = require('discord.js');
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages]
 });
@@ -62,6 +62,37 @@ client.on('messageCreate', message => {
         sendMessage(message, payload);
     }
 
+    // ステータス3候補型ランダム生成(7版準拠)
+    if (message.content == '/make2') {
+        const abilities = [
+            { name: '◆《筋力》 (STR)', min: 3 },
+            { name: '◆《体力》 (CON)', min: 3 },
+            { name: '◆《体格》 (SIZ)', min: 8 },
+            { name: '◆《敏捷》 (DEX)', min: 3 },
+            { name: '◆《外見》 (APP)', min: 3 },
+            { name: '◆《知力》 (INT)', min: 8 },
+            { name: '◆《精神》 (POW)', min: 3 },
+            { name: '◆《教育》 (EDU)', min: 8 },
+            { name: '◆《幸運》', min: 3 },
+        ];
+
+        let embed = new EmbedBuilder()
+            .setColor(0xff93c9)
+            .setTitle('〔Call of Cthulhu TRPG 7th Edition 準拠〕')
+	        .setDescription(`${message.author} さんのキャラは…`);
+
+        abilities.forEach((x) => {
+            const field = {
+                name: x.name,
+                value: getChara2Score(x.min, 18),
+                inline: true
+            };
+            embed.addFields(field);
+        });
+
+        sendMessage(message, { embeds: [embed] });
+    }
+
     // ダイス(/d <数字>d<数字>)
     if (message.content.startsWith('/d')) {
         const parameter = message.content.slice(3);
@@ -94,6 +125,10 @@ function getResource(filename) {
 
 function getChara1Score(ability) {
     return ability + '【' + getRandomInt(3, 18) + ',' + getRandomInt(3, 18) + ',' + getRandomInt(3, 18) + '】';
+}
+
+function getChara2Score(min, max) {
+    return '①' + getRandomInt(min, max)*5 + '\n②' + getRandomInt(min, max)*5 + '\n③' + getRandomInt(min, max)*5;
 }
 
 function getRandomInt(min, max) {
