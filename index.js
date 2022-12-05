@@ -19,7 +19,7 @@ client.on('messageCreate', message => {
     if (message.author.bot) {
         return;
     }
-    
+
     // コマンドヘルプ
     if (message.content == '/help') {
         const helps = [
@@ -27,8 +27,8 @@ client.on('messageCreate', message => {
             '/make2',
             '/make3', 
             '/d <数字>d<数字>',
-            '/bd <数字>',
-            '/pd <数字>',
+            '/bd <追加数量>',
+            '/pd <追加数量>',
             '/guide <list, create1,create2>※WIP',
         ];
 
@@ -85,7 +85,7 @@ client.on('messageCreate', message => {
         sendMessage(message, { embeds: [embed] });
     }
 
-    // ダイス(/d <数字>d<数字>)
+    // ダイス
     if (message.content.startsWith('/d')) {
         const parameter = message.content.slice(3);
         const rolls = parameter.split('d').map(x => parseInt(x));
@@ -100,6 +100,33 @@ client.on('messageCreate', message => {
         const sum = diceResults.reduce((sum, x) => sum + x, 0);
 
         const payload = `**${message.author} さんのダイスロール(${parameter}) ⇒⇒⇒ [${diceResults.toString()}] 合計【${sum}】**`;
+        sendMessage(message, payload);
+    }
+
+    // ボーナスダイス
+    if (message.content.startsWith('/bd')) {
+        const args = message.content.split(' ');
+        
+        if (args.length !== 2) {
+            // 引数過不足エラー
+            sendMessage(message, 'Please enter "/bd <追加数量>"');
+            return;
+        }
+
+        const bonusDice = parseInt(args[1]);
+        
+        if (isNaN(bonusDice)) {
+            // 形式エラー
+            sendMessage(message, '整数を入力してください：' + args[1]);
+            return;
+        }
+
+        const diceResults = [...Array(bonusDice + 1)].map(() => getRandomInt(1, 10) * 10);
+        const resultMax = Math.max(...diceResults);
+        const resultMin = Math.min(...diceResults);
+        const bdResult = resultMin + getRandomInt(0, 9);
+
+        const payload = `**${message.author} さんのボーナス・ダイス(+${bonusDice}個)の出目は〔${bdResult}〕(出目は[${diceResults.toString()}])**`;
         sendMessage(message, payload);
     }
 });
