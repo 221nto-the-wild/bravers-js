@@ -29,7 +29,6 @@ client.on('messageCreate', message => {
             '/d <ダイス数> <ダイスの目>',
             '/bd <追加ダイス数>',
             '/pd <追加ダイス数>',
-            '/guide <list, create1,create2>※WIP',
         ];
 
         const payload = "```css\n" + helps.join('\n') + "```\n";
