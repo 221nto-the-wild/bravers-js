@@ -121,7 +121,7 @@ client.on('messageCreate', message => {
             return;
         }
 
-        const diceResults = [...Array(bonusDice + 1)].map(() => getRandomInt(1, 10) * 10);
+        const diceResults = [...Array(bonusDice + 1)].map(() => getRandomInt(0, 10) * 10);
         const resultMax = Math.max(...diceResults);
         const resultMin = Math.min(...diceResults);
         const bdResult = resultMin + getRandomInt(0, 9);
@@ -148,7 +148,7 @@ client.on('messageCreate', message => {
             return;
         }
 
-        const diceResults = [...Array(penaltyDice + 1)].map(() => getRandomInt(1, 10) * 10);
+        const diceResults = [...Array(penaltyDice + 1)].map(() => getRandomInt(0, 10) * 10);
         const resultMax = Math.max(...diceResults);
         const resultMin = Math.min(...diceResults);
         const pdResult = resultMax + getRandomInt(0, 9);
